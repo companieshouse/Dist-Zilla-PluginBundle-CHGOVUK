@@ -9,7 +9,23 @@ with 'Dist::Zilla::Role::PluginBundle::Easy';
 sub configure {
     my ($self) = @_;
 
-    $self->add_bundle('@Basic');
+    $self->add_plugins(qw(
+        GatherDir
+        PruneCruft
+        ManifestSkip
+        MetaYAML
+        License
+        Readme
+        ExtraTests
+        ExecDir
+        ShareDir
+    
+        MakeMaker
+        Manifest
+    
+        TestRelease
+        ConfirmRelease
+    ));
 
     $self->add_plugins([
         'Git::NextVersion' => {
@@ -19,10 +35,9 @@ sub configure {
     ]);
 
     $self->add_plugins([
-        'ReadmeAnyFromPod / ReadmePodInRoot' => {
+        'ReadmeAnyFromPod' => {
             type     => 'markdown',
-            filename => 'README.md',
-            location => 'root',
+            filename => 'README.md'
         }
     ]);
 
@@ -35,7 +50,6 @@ sub configure {
     ]);
 
     $self->add_plugins(qw(
-        SynopsisTests
         PodSyntaxTests
         MetaJSON
     ));
@@ -43,6 +57,12 @@ sub configure {
     $self->add_plugins([
         'GithubMeta' => {
             issues => 1
+        }
+    ]);
+
+    $self->add_plugins([
+        'CopyFilesFromBuild' => {
+            copy => 'README.md'
         }
     ]);
 
@@ -71,21 +91,22 @@ Dist::Zilla::PluginBundle::CHGOVUK - Dist::Zilla plugin bundle for Companies Hou
 
 This is the plugin bundle that Companies House uses. It's equivalent to:
 
-    [@Basic]
+    [@Filter]
+    bundle = @Basic
+    remove = UploadToCPAN
 
     [Git::NextVersion]
     first_version   = 0.01
     version_regexp  = ^(\d+\.\d+)$
 
-    [ReadmeAnyFromPod / ReadmePodInRoot]
+    [ReadmeAnyFromPod]
     type = markdown
     filename = README.md
-    location = root
 
     [AutoPrereqs]
 
     [NextRelease]
-    format          = %-v  %{yyyy-MM-dd}d
+    format = %-v  %{yyyy-MM-dd}d
 
     [Test::Synopsis]
 
@@ -96,10 +117,13 @@ This is the plugin bundle that Companies House uses. It's equivalent to:
     [GithubMeta]
     issues = 1
 
+    [CopyFilesFromBuild]
+    copy = README.md
+
     [Git::Commit]
 
     [Git::Tag]
-    tag_format      = %v
+    tag_format = %v
 
 =cut
 
