@@ -63,7 +63,9 @@ no Moose;
 
 __END__
 
-# ABSTRACT: Dist::Zilla plugins for Companies House
+=head1 NAME
+
+Dist::Zilla::PluginBundle::CHGOVUK - Dist::Zilla plugin bundle for Companies House
 
 =head1 DESCRIPTION
 
@@ -75,14 +77,15 @@ This is the plugin bundle that Companies House uses. It's equivalent to:
     first_version   = 0.01
     version_regexp  = ^(\d+\.\d+)$
 
-    [ReadmeMarkdownFromPod]
-
-    [PkgVersion]
+    [ReadmeAnyFromPod / ReadmePodInRoot]
+    type = markdown
+    filename = README.md
+    location = root
 
     [AutoPrereqs]
 
     [NextRelease]
-    format          = %v %{MMM d yyyy}d
+    format          = %-v  %{yyyy-MM-dd}d
 
     [Test::Synopsis]
 
@@ -93,18 +96,10 @@ This is the plugin bundle that Companies House uses. It's equivalent to:
     [GithubMeta]
     issues = 1
 
-    [CopyFilesFromBuild]
-    copy            = README.mkdn
-
-    [PruneFiles]
-    filenames       = dist.ini
-
     [Git::Commit]
 
     [Git::Tag]
     tag_format      = %v
-
-    [PodWeaver]
 
 =cut
 
