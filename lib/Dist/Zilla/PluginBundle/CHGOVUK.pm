@@ -102,7 +102,7 @@ Dist::Zilla::PluginBundle::CHGOVUK - Dist::Zilla plugin defaults for Companies H
   ; dist.ini
   name = Dist-Name
   [@CHGOVUK]
-  installer = MakeMaker
+  installer = ModuleBuildTiny
  
 =head1 DESCRIPTION
  
