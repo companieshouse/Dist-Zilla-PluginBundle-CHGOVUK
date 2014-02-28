@@ -1,129 +1,118 @@
-use strict;
-use warnings;
-
 package Dist::Zilla::PluginBundle::CHGOVUK;
 use Moose;
-
-with 'Dist::Zilla::Role::PluginBundle::Easy';
-
-sub configure {
-    my ($self) = @_;
-
-    $self->add_plugins(qw(
-        GatherDir
-        PruneCruft
-        ManifestSkip
-        MetaYAML
-        License
-        Readme
-        ExtraTests
-        ExecDir
-        ShareDir
-    
-        MakeMaker
-        Manifest
-    
-        TestRelease
-        ConfirmRelease
-    ));
-
-    $self->add_plugins([
-        'Git::NextVersion' => {
-            first_version  => '0.01',
-            version_regexp => '^(\d+\.\d+)$'
-        }
-    ]);
-
-    $self->add_plugins([
-        'ReadmeAnyFromPod' => {
-            type     => 'markdown',
-            filename => 'README.md'
-        }
-    ]);
-
-    $self->add_plugins('AutoPrereqs');
-
-    $self->add_plugins([
-        'NextRelease' => {
-            format => '%-v  %{yyyy-MM-dd}d'
-        }
-    ]);
-
-    $self->add_plugins(qw(
-        PodSyntaxTests
-        MetaJSON
-    ));
-
-    $self->add_plugins([
-        'GithubMeta' => {
-            issues => 1
-        }
-    ]);
-
-    $self->add_plugins([
-        'CopyFilesFromBuild' => {
-            copy => 'README.md'
-        }
-    ]);
-
-    $self->add_plugins(qw(Git::Commit));
-
-    $self->add_plugins([
-        'Git::Tag' => {
-            tag_format => '%v'
-        }
-    ]);
-
+with 'Dist::Zilla::Role::PluginBundle::Easy',
+     'Dist::Zilla::Role::PluginBundle::Config::Slicer';
+ 
+use namespace::autoclean;
+ 
+has installer => (
+    is => 'ro',
+    isa => 'Str',
+    lazy => 1,
+    default => sub { $_[0]->payload->{installer} || 'MakeMaker' },
+);
+ 
+sub build_file {
+    my $self = shift;
+    $self->installer =~ /MakeMaker/ ? 'Makefile.PL' : 'Build.PL';
 }
-
+ 
+sub configure {
+    my $self = shift;
+ 
+    my @accepts = qw( MakeMaker MakeMaker::IncShareDir ModuleBuild ModuleBuildTiny );
+    my %accepts = map { $_ => 1 } @accepts;
+ 
+    unless ($accepts{$self->installer}) {
+        die sprintf("Unknown installer: '%s'. " .
+                    "Acceptable values are MakeMaker, ModuleBuild and ModuleBuildTiny\n",
+                    $self->installer);
+    }
+ 
+    my @dirty_files = ('dist.ini', 'Changes', 'META.json', 'README.md', $self->build_file);
+    my @exclude_release = ('README.md');
+ 
+    $self->add_plugins(
+        [ 'NameFromDirectory' ],
+ 
+        # Make the git repo installable
+        [ 'Git::GatherDir', { exclude_filename => [ $self->build_file, 'META.json', 'LICENSE', @exclude_release ] } ],
+        #[ 'CopyFilesFromBuild', { copy => [ 'META.json', 'LICENSE', $self->build_file ] } ],
+ 
+        # should be after GatherDir
+        [ 'Git::NextVersion', { first_version => '0.01', version_regexp => '^(.+)$' } ],
+ 
+        [ 'ReversionOnRelease', { prompt => 1 } ],
+ 
+        # after ReversionOnRelease for munge_files, before Git::Commit for after_release
+        [ 'NextRelease', { format => '%-v  %{yyyy-MM-dd}d' } ],
+ 
+        [ 'Git::Check', { allow_dirty => \@dirty_files } ],
+ 
+        # Make Github center and front
+        [ 'GithubMeta', { issues => 1 } ],
+        [ 'ReadmeAnyFromPod', { type => 'markdown', filename => 'README.md', location => 'root' } ],
+ 
+        # Set no_index to sensible directories
+        [ 'MetaNoIndex', { directory => [ qw( t xt inc share eg examples ) ] } ],
+ 
+        [ 'AutoPrereqs' ],
+        [ $self->installer ],
+        [ 'MetaJSON' ],
+ 
+        # standard stuff
+        [ 'PodSyntaxTests' ],
+        [ 'MetaYAML' ],
+        [ 'License' ],
+        [ 'ReadmeFromPod' ],
+        [ 'ExtraTests' ],
+        [ 'ExecDir', { dir => 'script' } ],
+        [ 'ShareDir' ],
+        [ 'Manifest' ],
+        [ 'ManifestSkip' ],
+ 
+        [ 'CheckChangesHasContent' ],
+        [ 'TestRelease' ],
+        [ 'ConfirmRelease' ],
+        [ 'FakeRelease' ],
+ 
+        [ 'CopyFilesFromRelease', { match => '\.pm$' } ],
+        [ 'Git::Commit', {
+            commit_msg => '%v',
+            allow_dirty => \@dirty_files,
+            allow_dirty_match => '\.pm$', # .pm files copied back from Release
+        } ],
+        [ 'Git::Tag', { tag_format => '%v', tag_message => '' } ],
+        [ 'Git::Push', { remotes_must_exist => 0 } ],
+ 
+    );
+}
+ 
 __PACKAGE__->meta->make_immutable;
-no Moose;
-
 1;
-
+ 
 __END__
-
+ 
 =head1 NAME
-
-Dist::Zilla::PluginBundle::CHGOVUK - Dist::Zilla plugin bundle for Companies House
-
+ 
+Dist::Zilla::PluginBundle::CHGOVUK - Dist::Zilla plugin defaults for Companies House
+ 
+=head1 SYNOPSIS
+ 
+  ; dist.ini
+  name = Dist-Name
+  [@CHGOVUK]
+  installer = MakeMaker
+ 
 =head1 DESCRIPTION
-
-This is the plugin bundle that Companies House uses. It's equivalent to:
-
-    [@Filter]
-    bundle = @Basic
-    remove = UploadToCPAN
-
-    [Git::NextVersion]
-    first_version   = 0.01
-    version_regexp  = ^(\d+\.\d+)$
-
-    [ReadmeAnyFromPod]
-    type = markdown
-    filename = README.md
-
-    [AutoPrereqs]
-
-    [NextRelease]
-    format = %-v  %{yyyy-MM-dd}d
-
-    [Test::Synopsis]
-
-    [PodSyntaxTests]
-
-    [MetaJSON]
-
-    [GithubMeta]
-    issues = 1
-
-    [CopyFilesFromBuild]
-    copy = README.md
-
-    [Git::Commit]
-
-    [Git::Tag]
-    tag_format = %v
-
+ 
+This is a Dist::Zilla plugin bundle that implements the opinionated build
+process of Companies House. Roughly equivalent to:
+ 
+  # TBD
+ 
+=head1 SEE ALSO
+ 
+L<Dist::Milla>
+ 
 =cut
-
