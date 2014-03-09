@@ -1,4 +1,7 @@
 Revision history for Dist-Zilla-PluginBundle-CHGOVUK
 
 {{$NEXT}}
+  - Use CHGOVUK PluginBundle to build itself
+
+0.01  2014-03-09
   - Initial release
