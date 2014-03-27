@@ -1,4 +1,7 @@
 package Dist::Zilla::PluginBundle::CHGOVUK;
+
+our $VERSION = '0.02';
+
 use Moose;
 with 'Dist::Zilla::Role::PluginBundle::Easy',
      'Dist::Zilla::Role::PluginBundle::Config::Slicer';
