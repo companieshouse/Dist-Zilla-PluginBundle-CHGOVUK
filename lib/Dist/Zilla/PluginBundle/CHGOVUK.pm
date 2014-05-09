@@ -1,6 +1,6 @@
 package Dist::Zilla::PluginBundle::CHGOVUK;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Moose;
 with 'Dist::Zilla::Role::PluginBundle::Easy',
