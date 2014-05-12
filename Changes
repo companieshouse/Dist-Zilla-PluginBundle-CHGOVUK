@@ -1,6 +1,7 @@
 Revision history for Dist-Zilla-PluginBundle-CHGOVUK
 
 {{$NEXT}}
+  - Fix broken build
 
 0.03  2014-05-09
   - Add prereqs option to make prereqs gathering configurable
