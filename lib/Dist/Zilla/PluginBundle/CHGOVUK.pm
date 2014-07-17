@@ -47,7 +47,7 @@ sub configure {
 
         # Make the git repo installable
         [ 'Git::GatherDir', { exclude_filename => [ $self->build_file, 'META.json', 'LICENSE', @exclude_release ] } ],
-        [ 'CopyFilesFromBuild', { copy => [ 'META.json', 'LICENSE', $self->build_file ] } ],
+	[ 'CopyFilesFromBuild', { copy => [ 'LICENSE' ] } ],
 
         # should be after GatherDir
         # Equivalent to Module::Install's version_from, license_from and author_from
