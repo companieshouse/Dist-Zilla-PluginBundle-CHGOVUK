@@ -83,6 +83,7 @@ sub configure {
 
         [ 'CheckChangesHasContent' ],
         [ 'TestRelease' ],
+        [ 'FakeRelease' ],
 
         [ 'CopyFilesFromRelease', { match => '\.pm$' } ],
         [ 'Git::Commit', {
