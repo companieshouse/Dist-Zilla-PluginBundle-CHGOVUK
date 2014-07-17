@@ -1,6 +1,7 @@
 Revision history for Dist-Zilla-PluginBundle-CHGOVUK
 
 {{$NEXT}}
+  - Remove ReversionOnRelease, ConfirmRelease and FakeRelease
 
 0.05  2014-05-22
   - Get version number from perl module (not git tag)

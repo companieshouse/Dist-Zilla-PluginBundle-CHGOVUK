@@ -1,6 +1,6 @@
 package Dist::Zilla::PluginBundle::CHGOVUK;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use Moose;
 with 'Dist::Zilla::Role::PluginBundle::Easy',
@@ -54,8 +54,6 @@ sub configure {
         [ 'VersionFromModule' ],
         #[ 'LicenseFromModule', { override_author => 1 } ],
 
-        [ 'ReversionOnRelease', { prompt => 1 } ],
-
         # after ReversionOnRelease for munge_files, before Git::Commit for after_release
         [ 'NextRelease', { format => '%-v  %{yyyy-MM-dd}d' } ],
 
@@ -85,8 +83,6 @@ sub configure {
 
         [ 'CheckChangesHasContent' ],
         [ 'TestRelease' ],
-        [ 'ConfirmRelease' ],
-        [ 'FakeRelease' ],
 
         [ 'CopyFilesFromRelease', { match => '\.pm$' } ],
         [ 'Git::Commit', {
