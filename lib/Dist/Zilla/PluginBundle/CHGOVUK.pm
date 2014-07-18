@@ -12,7 +12,7 @@ has installer => (
     is => 'ro',
     isa => 'Str',
     lazy => 1,
-    default => sub { $_[0]->payload->{installer} || 'MakeMaker' },
+    default => sub { $_[0]->payload->{installer} || 'ModuleBuild' },
 );
 
 has prereqs => (
