@@ -91,6 +91,7 @@ sub configure {
             allow_dirty => \@dirty_files,
             allow_dirty_match => '\.pm$', # .pm files copied back from Release
         } ],
+        [ 'Git::CommitBuild', { release_branch => 'releases', release_message => '%v %h' } ],
         [ 'Git::Tag', { tag_format => '%v', tag_message => '' } ],
         [ 'Git::Push', { remotes_must_exist => 0 } ],
 

@@ -4,6 +4,7 @@ Revision history for Dist-Zilla-PluginBundle-CHGOVUK
   - Swith default installer from MakeMaker to ModuleBuild
   - Remove ReversionOnRelease and ConfirmRelease
   - Remove copy of META.json and build_file from build
+  - Add Git::CommitBuild plugin
 
 0.05  2014-05-22
   - Get version number from perl module (not git tag)
