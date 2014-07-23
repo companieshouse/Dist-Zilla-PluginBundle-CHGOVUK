@@ -19,7 +19,7 @@ has prereqs => (
     is => 'ro',
     isa => 'Str',
     lazy => 1,
-    default => sub { $_[0]->payload->{prereqs} || 'AutoPrereqs' },
+    default => sub { $_[0]->payload->{prereqs} || 'Prereqs::FromCPANfile' },
 );
 
 sub build_file {
