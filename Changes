@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-PluginBundle-CHGOVUK
 
 {{$NEXT}}
+
+0.06  2014-07-25
   - Swith default installer from MakeMaker to ModuleBuild
   - Remove ReversionOnRelease and ConfirmRelease
   - Remove copy of META.json and build_file from build
