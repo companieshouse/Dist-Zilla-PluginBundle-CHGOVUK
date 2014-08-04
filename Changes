@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-PluginBundle-CHGOVUK
 
 {{$NEXT}}
+
+0.07  2014-08-04
   - Deprecated 'CopyFilesFromRelease'
 
 0.06  2014-07-25
