@@ -1,6 +1,7 @@
 Revision history for Dist-Zilla-PluginBundle-CHGOVUK
 
 {{$NEXT}}
+  - Deprecated 'CopyFilesFromRelease'
 
 0.06  2014-07-25
   - Swith default installer from MakeMaker to ModuleBuild
