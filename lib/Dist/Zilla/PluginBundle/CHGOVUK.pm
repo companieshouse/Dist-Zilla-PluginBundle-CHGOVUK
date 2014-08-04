@@ -85,7 +85,6 @@ sub configure {
         [ 'TestRelease' ],
         [ 'FakeRelease' ],
 
-        [ 'CopyFilesFromRelease', { match => '\.pm$' } ],
         [ 'Git::Commit', {
             commit_msg => '%v',
             allow_dirty => \@dirty_files,
